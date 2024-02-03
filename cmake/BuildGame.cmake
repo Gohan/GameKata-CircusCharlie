@@ -1,7 +1,7 @@
 project(CircusCharlieGame)
 set(PROJECT_NAME CircusCharlieGame)
 set(CircusCharlieGame_SOURCES
-        src/main2.cpp
+        src/main.cpp
         src/game/game.cpp)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_VERBOSE_MAKEFILE ON)

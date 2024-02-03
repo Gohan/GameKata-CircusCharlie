@@ -1,80 +1,99 @@
-#include <iostream>
+//Using SDL and standard IO
+#include "SDL.h"
+#include "SDL_image.h"
+#include "game/game.h"
+#include <cstdio>
+#include <string>
+#include <memory>
 
-/*******************************************************************************************
-*
-*   raylib-cpp [core] example - Basic window (adapted for HTML5 platform)
-*
-*   This example is prepared to compile for PLATFORM_WEB, PLATFORM_DESKTOP and PLATFORM_RPI
-*   As you will notice, code structure is slightly diferent to the other examples...
-*   To compile it for PLATFORM_WEB just uncomment #define PLATFORM_WEB at beginning
-*
-*   This example has been created using raylib-cpp (www.raylib.com)
-*   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
-*
-*   Copyright (c) 2015 Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
+//Screen dimension constants
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
-#include "raylib-cpp.hpp"
+SDL_Surface* LoadSurface(SDL_Surface* pSurface, std::string path);
 
-#if defined(PLATFORM_WEB)
-#include <emscripten/emscripten.h>
-#endif
-
-//----------------------------------------------------------------------------------
-// Global Variables Definition
-//----------------------------------------------------------------------------------
-int screenWidth = 800;
-int screenHeight = 450;
-
-//----------------------------------------------------------------------------------
-// Module Functions Declaration
-//----------------------------------------------------------------------------------
-void UpdateDrawFrame(void);     // Update and Draw one frame
-
-//----------------------------------------------------------------------------------
-// Main Enry Point
-//----------------------------------------------------------------------------------
-int main()
-{
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    raylib::Window window(screenWidth, screenHeight, "raylib-cpp [core] example - basic window");
-
-#if defined(PLATFORM_WEB)
-    emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
-#else
-    SetTargetFPS(60);   // Set our game to run at 60 frames-per-second
-    //--------------------------------------------------------------------------------------
-
-    // Main game loop
-    while (!window.ShouldClose())    // Detect window close button or ESC key
-    {
-        UpdateDrawFrame();
+bool InitImagePng() {
+    int imgFlags = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlags) & imgFlags)) {
+        return false;
     }
-#endif
+    return true;
+}
+
+int SDL_main(int argc, char* args[]) {
+    auto game = std::make_unique<Game>();
+    game->Init("MyGame", SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    //The window we'll be rendering to
+    SDL_Window* window = nullptr;
+    SDL_Renderer* gRenderer = nullptr;
+    //The surface contained by the window
+    SDL_Surface* screenSurface = NULL;
+
+    //Initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+    } else {
+        //Create window
+        window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+                                  SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        if (window == NULL) {
+            printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        } else if (!InitImagePng()) {
+            printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        } else {
+            //Get window surface
+            screenSurface = SDL_GetWindowSurface(window);
+            gRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+            auto sdlSurface = LoadSurface(screenSurface, "assets/Man.png");
+
+            //Fill the surface white
+            SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+
+            SDL_Rect stretchRect{0, 0, 100, 100};
+            SDL_BlitScaled(sdlSurface, NULL, screenSurface, &stretchRect);            //Update the surface
+
+            SDL_UpdateWindowSurface(window);
+
+            //Hack to get window to stay up
+            SDL_Event e;
+            bool quit = false;
+            while (quit == false) {
+                while (SDL_PollEvent(&e)) {
+                    if (e.type == SDL_QUIT) quit = true;
+                    printf("...%d", e.type);
+                }
+            }
+        }
+    }
+
+    //Destroy window
+    SDL_DestroyWindow(window);
+
+    //Quit SDL subsystems
+    SDL_Quit();
 
     return 0;
 }
 
-//----------------------------------------------------------------------------------
-// Module Functions Definition
-//----------------------------------------------------------------------------------
-void UpdateDrawFrame(void)
-{
-    // Update
-    //----------------------------------------------------------------------------------
-    // TODO: Update your variables here
-    //----------------------------------------------------------------------------------
+SDL_Surface* LoadSurface(SDL_Surface* pSurface, std::string path) {
+    //The final optimized image
+    SDL_Surface* optimizedSurface = NULL;
 
-    // Draw
-    //----------------------------------------------------------------------------------
-    BeginDrawing();
+    //Load image at specified path
+    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+    if (loadedSurface == NULL) {
+        printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+    } else {
+        //Convert surface to screen format
+        optimizedSurface = SDL_ConvertSurface(loadedSurface, pSurface->format, 0);
+        if (optimizedSurface == NULL) {
+            printf("Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+        }
 
-    ClearBackground(RAYWHITE);
+        //Get rid of old loaded surface
+        SDL_FreeSurface(loadedSurface);
+    }
 
-    DrawText("Congrats! You created your first raylib-cpp window!", 160, 200, 20, LIGHTGRAY);
-
-    EndDrawing();
-    //----------------------------------------------------------------------------------
+    return optimizedSurface;
 }
