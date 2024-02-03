@@ -1,14 +1,16 @@
 //Using SDL and standard IO
 #include "SDL.h"
 #include "SDL_image.h"
-#include <stdio.h>
+#include "game/game.h"
+#include <cstdio>
 #include <string>
+#include <memory>
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-SDL_Surface *LoadSurface(SDL_Surface *pSurface, std::string path);
+SDL_Surface* LoadSurface(SDL_Surface* pSurface, std::string path);
 
 bool InitImagePng() {
     int imgFlags = IMG_INIT_PNG;
@@ -18,14 +20,15 @@ bool InitImagePng() {
     return true;
 }
 
-int SDL_main(int argc, char *args[]) {
+int SDL_main(int argc, char* args[]) {
+    auto game = std::make_unique<Game>();
+    game->Init("MyGame", SCREEN_WIDTH, SCREEN_HEIGHT);
+
     //The window we'll be rendering to
-    SDL_Window *window = nullptr;
-    SDL_Renderer *gRenderer = nullptr;
-
-
+    SDL_Window* window = nullptr;
+    SDL_Renderer* gRenderer = nullptr;
     //The surface contained by the window
-    SDL_Surface *screenSurface = NULL;
+    SDL_Surface* screenSurface = NULL;
 
     //Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -47,12 +50,8 @@ int SDL_main(int argc, char *args[]) {
             //Fill the surface white
             SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 
-            SDL_Rect stretchRect;
-            stretchRect.x = 0;
-            stretchRect.y = 0;
-            stretchRect.w = 100;
-            stretchRect.h = 100;
-            SDL_BlitScaled( sdlSurface, NULL, screenSurface, &stretchRect );            //Update the surface
+            SDL_Rect stretchRect{0, 0, 100, 100};
+            SDL_BlitScaled(sdlSurface, NULL, screenSurface, &stretchRect);            //Update the surface
 
             SDL_UpdateWindowSurface(window);
 
@@ -62,6 +61,7 @@ int SDL_main(int argc, char *args[]) {
             while (quit == false) {
                 while (SDL_PollEvent(&e)) {
                     if (e.type == SDL_QUIT) quit = true;
+                    printf("...%d", e.type);
                 }
             }
         }
@@ -76,12 +76,12 @@ int SDL_main(int argc, char *args[]) {
     return 0;
 }
 
-SDL_Surface *LoadSurface(SDL_Surface *pSurface, std::string path) {
+SDL_Surface* LoadSurface(SDL_Surface* pSurface, std::string path) {
     //The final optimized image
-    SDL_Surface *optimizedSurface = NULL;
+    SDL_Surface* optimizedSurface = NULL;
 
     //Load image at specified path
-    SDL_Surface *loadedSurface = IMG_Load(path.c_str());
+    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
     if (loadedSurface == NULL) {
         printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
     } else {
