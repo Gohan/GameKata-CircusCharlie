@@ -7,6 +7,7 @@
 #include <memory>
 
 //Screen dimension constants
+std::unique_ptr<Game> g_game;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 

@@ -15,7 +15,7 @@ void Game::Init(const std::string& title, int windowWidth, int windowHeight) {
     );
     screen = std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface*)>>(
             SDL_GetWindowSurface(window.get()),
-            [this](SDL_Surface* surface) {
+            [&](SDL_Surface* surface) {
                 printf("SDL_DestroyWindowSurface: %p\n", window.get());
                 SDL_DestroyWindowSurface(window.get());
             }

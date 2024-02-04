@@ -6,10 +6,9 @@ set(CircusCharlieGame_SOURCES
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(SDL2_INCLUDE_DIR "${SDL2_SOURCE_DIR}/include")
-set(SDL2_image_INCLUDE_DIR "${SDL2_image_SOURCE_DIR}/include")
+
 set(CircusCharlieGame_INCLUDE_DIR "src")
-include_directories(${SDL2_INCLUDE_DIR} ${SDL2_image_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_image_INCLUDE_DIR} ${GSL_INCLUDE_DIR})
 message("Hello ${SDL2_INCLUDE_DIR} ${SDL2_SOURCE_DIR} ${SDL2_image_SOURCE_DIR}")
 add_executable(${PROJECT_NAME} ${CircusCharlieGame_SOURCES})
 

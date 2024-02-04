@@ -2,6 +2,7 @@
 #define GAMEKATA_GAME_H
 
 #include "sdl.h"
+#include <gsl/gsl>
 #include <memory>
 #include <functional>
 
