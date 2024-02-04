@@ -5,7 +5,7 @@ set(CircusCharlieGame_SOURCES
         src/game/game.cpp)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_VERBOSE_MAKEFILE ON)
-
+set(PLATFORM "Win32")
 
 set(CircusCharlieGame_INCLUDE_DIR "src")
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_image_INCLUDE_DIR} ${GSL_INCLUDE_DIR})

@@ -18,6 +18,10 @@ function(SetupGoogleTest)
 endfunction()
 
 function(SetupSDL)
+    set(SDL2IMAGE_INSTALL OFF)
+    set(SDL_SHARED OFF)
+    set(BUILD_SHARED_LIBS FALSE)
+
     EnsurePackage(SDL2 https://github.com/libsdl-org/SDL release-2.30.0)
     set(SDL2_INCLUDE_DIR "${SDL2_SOURCE_DIR}/include" PARENT_SCOPE)
 
@@ -28,10 +32,10 @@ endfunction()
 function(SetupFrameworks)
     EnsurePackage(GSL https://github.com/microsoft/GSL v4.0.0)
     set(GSL_INCLUDE_DIR "${GSL_SOURCE_DIR}/include" PARENT_SCOPE)
-
-    set(BOOST_INCLUDE_LIBRARIES thread filesystem system)
-    set(BOOST_ENABLE_CMAKE ON)
-    EnsurePackage(Boost https://github.com/boostorg/boost.git boost-1.84.0)
+#
+#    set(BOOST_INCLUDE_LIBRARIES thread filesystem system)
+#    set(BOOST_ENABLE_CMAKE ON)
+#    EnsurePackage(Boost https://github.com/boostorg/boost.git boost-1.84.0)
 endfunction()
 
 SetupFrameworks()

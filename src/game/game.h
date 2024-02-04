@@ -1,7 +1,7 @@
 #ifndef GAMEKATA_GAME_H
 #define GAMEKATA_GAME_H
 
-#include "sdl.h"
+#include "SDL.h"
 #include <gsl/gsl>
 #include <memory>
 #include <functional>

@@ -1,7 +1,7 @@
 #pragma clang diagnostic push
 
 #include "game.h"
-#include "sdl.h"
+#include "SDL.h"
 
 Game::Game() {
 }
