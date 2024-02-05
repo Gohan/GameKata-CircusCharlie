@@ -1,8 +1,8 @@
 //
 // Created by cppgo on 2024/2/3.
 //
+import Game;
 #include "gtest/gtest.h"
-#include "game/game.h"
 
 /**
  * 冒烟测试
