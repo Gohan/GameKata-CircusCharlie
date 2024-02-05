@@ -6,3 +6,5 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Common.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/BuildGame.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/TestGame.cmake)
 project(GameKata)
+
+CPMUsePackageLock(package-lock.cmake)

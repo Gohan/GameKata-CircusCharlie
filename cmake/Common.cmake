@@ -1,4 +1,5 @@
 include("${CMAKE_CURRENT_LIST_DIR}/CPM.cmake")
+
 function(SetupGoogleTest)
     CPMAddPackage("gh:google/googletest#v1.14.0")
 endfunction()
