@@ -1,4 +1,5 @@
 //Using SDL and standard IO
+import Config;
 #include "SDL.h"
 #include "SDL_image.h"
 #include "game/game.h"
@@ -23,6 +24,7 @@ bool InitImagePng() {
 
 int SDL_main(int argc, char* args[]) {
     auto game = std::make_unique<Game>();
+    Config::SetGame(game.get());
     game->Init("MyGame", SCREEN_WIDTH, SCREEN_HEIGHT);
 
     //The window we'll be rendering to

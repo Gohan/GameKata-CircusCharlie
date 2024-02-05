@@ -2,7 +2,11 @@ project(CircusCharlieGame)
 set(PROJECT_NAME CircusCharlieGame)
 set(CircusCharlieGame_SOURCES
         src/main.cpp
-        src/game/game.cpp)
+        src/game/game.cpp
+)
+set(CircusCharlieGame_MODULES
+        src/config.cppm
+)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(PLATFORM "Win32")
@@ -11,6 +15,10 @@ set(CircusCharlieGame_INCLUDE_DIR "src")
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_image_INCLUDE_DIR} ${GSL_INCLUDE_DIR})
 message("Hello ${SDL2_INCLUDE_DIR} ${SDL2_SOURCE_DIR} ${SDL2_image_SOURCE_DIR}")
 add_executable(${PROJECT_NAME} ${CircusCharlieGame_SOURCES})
+target_sources(${PROJECT_NAME}
+        PUBLIC
+        FILE_SET all_my_modules TYPE CXX_MODULES FILES ${CircusCharlieGame_MODULES}
+)
 
 # SDL2::SDL2main may or may not be available. It is e.g. required by Windows GUI applications
 if(TARGET SDL2::SDL2main)
