@@ -2,7 +2,7 @@
 // Created by cppgo on 2024/2/4.
 //
 export module Config;
-class Game;
+import Game;
 
 export class Config {
 public:

@@ -2,9 +2,9 @@ project(CircusCharlieGame)
 set(PROJECT_NAME CircusCharlieGame)
 set(CircusCharlieGame_SOURCES
         src/main.cpp
-        src/game/game.cpp
 )
 set(CircusCharlieGame_MODULES
+        src/game/game.cppm
         src/config.cppm
 )
 set(CMAKE_CXX_STANDARD 20)
