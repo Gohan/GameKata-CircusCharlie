@@ -25,6 +25,8 @@ int SDL_main(int argc, char* args[]) {
     auto game = std::make_unique<Game>();
     Config::SetGame(game.get());
     game->Init("MyGame", SCREEN_WIDTH, SCREEN_HEIGHT);
+    game->RunLoop();
+    game = nullptr;
 
     //The window we'll be rendering to
     SDL_Window* window = nullptr;
