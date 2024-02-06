@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.27)
+# 隐式加载依赖的模块
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-read-modules-implicitly")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 # cmake include Path
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")

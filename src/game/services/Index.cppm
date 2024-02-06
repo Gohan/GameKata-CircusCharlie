@@ -6,5 +6,5 @@ module;
 export module GameService;
 
 export import :IService;
-export import :ControllerGameService;
 export import :GameServiceContainer;
+export import :ControllerGameService;
