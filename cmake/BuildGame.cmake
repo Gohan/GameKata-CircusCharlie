@@ -26,6 +26,8 @@ if(TARGET SDL2::SDL2main)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2-static)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_image::SDL2_image-static)
+target_compile_definitions(${PROJECT_NAME} PRIVATE FAKE_MODULE_INCLUDE=1)
+
 #target_link_libraries(${PROJECT_NAME} PUBLIC raylib raylib_cpp)
 #target_link_libraries(${PROJECT_NAME} PUBLIC raylib raylib_cpp gtest_main)
 

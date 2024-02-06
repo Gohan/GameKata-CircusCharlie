@@ -1,6 +1,3 @@
-//
-// Created by cppgo on 2024/2/6.
-//
 module;
 
 #include "std.h"

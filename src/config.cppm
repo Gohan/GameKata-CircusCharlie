@@ -1,7 +1,7 @@
-//
-// Created by cppgo on 2024/2/4.
-//
+module;
+
 export module Config;
+
 import Game;
 import GameService;
 
@@ -14,10 +14,6 @@ private:
 };
 
 void* Config::s_pGame = nullptr;
-
-Game* Config::Game() {
-    return static_cast<class Game*>(s_pGame);
-}
 
 void Config::SetGame(void* pGame) {
     s_pGame = pGame;
