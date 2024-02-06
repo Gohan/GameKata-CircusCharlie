@@ -5,6 +5,7 @@ module;
 #include <gsl/gsl>
 
 export module Game;
+import GameService;
 
 export class Game {
 public:
@@ -26,6 +27,7 @@ private:
     std::tm time = {};
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window;
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer;
+    GameServiceContainer container;
 };
 
 Game::Game() {
@@ -54,6 +56,9 @@ void Game::Init(const std::string& title, int windowWidth, int windowHeight) {
             SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC),
             SDL_DestroyRenderer
     );
+    container.AddService(std::make_shared<ControllerGameService>());
+    auto spControllerGameService = container.GetService<ControllerGameService>();
+    printf("spControllerGameService: %p\n", spControllerGameService.get());
 }
 
 void Game::RunLoop() {

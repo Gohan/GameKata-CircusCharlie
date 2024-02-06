@@ -3,6 +3,7 @@
 //
 export module Config;
 import Game;
+import GameService;
 
 export class Config {
 public:
