@@ -5,14 +5,9 @@ module;
 
 #include "std.h"
 
-export module GameService;
+export module GameService:GameServiceContainer;
 
-export class IService;
-
-export class IService {
-public:
-    virtual ~IService() = default;
-};
+import :IService;
 
 export class GameServiceContainer {
 public:
@@ -31,7 +26,4 @@ public:
 
 private:
     std::map<std::string, std::shared_ptr<IService>> services;
-};
-
-export class ControllerGameService : public IService {
 };

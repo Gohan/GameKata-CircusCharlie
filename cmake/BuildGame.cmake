@@ -5,7 +5,10 @@ set(CircusCharlieGame_SOURCES
 )
 set(CircusCharlieGame_MODULES
         src/game/game.cppm
-        src/game/services/GameService.cppm
+        src/game/services/ControllerGameService.cppm
+        src/game/services/GameServiceContainer.cppm
+        src/game/services/IService.cppm
+        src/game/services/Index.cppm
         src/config.cppm
 )
 set(CMAKE_CXX_STANDARD 20)

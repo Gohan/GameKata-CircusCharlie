@@ -1,10 +1,10 @@
 //Using SDL and standard IO
-import Config;
-import Game;
 #include "std.h"
 #include "SDL.h"
 #include "SDL_image.h"
 #include <cstdio>
+import Config;
+import Game;
 
 //Screen dimension constants
 std::unique_ptr<Game> g_game;
