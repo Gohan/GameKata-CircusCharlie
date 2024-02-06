@@ -1,18 +1,17 @@
-//
-// Created by cppgo on 2024/2/6.
-//
-module;
+#pragma once
 
 #include "std.h"
 
-export module GameService:GameServiceContainer;
-
-import :IService;
-
-class Game;
-export class GameServiceContainer {
+class IService {
 public:
-    explicit GameServiceContainer(Game* game);
+    virtual ~IService() = 0;
+};
+
+class BaseGame;
+
+class GameServiceContainer {
+public:
+    explicit GameServiceContainer(BaseGame* game);
     virtual ~GameServiceContainer() = default;
 
     template<class T = IService>
@@ -27,5 +26,6 @@ public:
 
 private:
     std::map<std::string, std::shared_ptr<IService>> services;
+    BaseGame* game;
 };
 

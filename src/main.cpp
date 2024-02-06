@@ -3,8 +3,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include <cstdio>
-import Config;
-import Game;
+#include "game/game.h"
 
 //Screen dimension constants
 std::unique_ptr<Game> g_game;
@@ -23,7 +22,6 @@ bool InitImagePng() {
 
 int SDL_main(int argc, char* args[]) {
     auto game = std::make_unique<Game>();
-    Config::SetGame(game.get());
     game->Init("MyGame", SCREEN_WIDTH, SCREEN_HEIGHT);
     game->RunLoop();
     game = nullptr;

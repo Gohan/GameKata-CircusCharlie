@@ -1,16 +1,16 @@
-module;
+//
+// Created by cppgo on 2024/2/6.
+//
+#pragma once
 
 #include "std.h"
-#include "SDL.h"
-#include <gsl/gsl>
+#include <SDL.h>
+class GameServiceContainer;
 
-export module Game;
-import GameService;
-
-export class Game {
+class BaseGame {
 public:
-    Game();
-    virtual ~Game();
+    BaseGame();
+    virtual ~BaseGame();
     void Init(const std::string& title, int windowWidth, int windowHeight);
     void RunLoop();
     SDL_Window* Window();
