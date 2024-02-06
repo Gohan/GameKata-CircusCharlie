@@ -1,4 +1,3 @@
-#pragma clang diagnostic push
 module;
 
 #include "std.h"
@@ -26,25 +25,34 @@ private:
     uint64_t nextTick = 0;
     std::tm time = {};
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window;
-    std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface*)>> screen;
+    std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer;
 };
 
 Game::Game() {
 }
 
 void Game::Init(const std::string& title, int windowWidth, int windowHeight) {
+    //Initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
+        printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
+        exit(-1);
+    }
+
+    if (SDL_NumJoysticks() < 1) {
+        printf("Warning: No joysticks connected!\n");
+    } else {
+        printf("Info: %d joysticks connected!\n", SDL_NumJoysticks());
+    }
+
     window = std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>>(
             SDL_CreateWindow(
                     title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                     windowWidth, windowHeight, SDL_WINDOW_RESIZABLE
             ), SDL_DestroyWindow
     );
-    screen = std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface*)>>(
-            SDL_GetWindowSurface(window.get()),
-            [&](SDL_Surface* surface) {
-                printf("SDL_DestroyWindowSurface: %p\n", window.get());
-                SDL_DestroyWindowSurface(window.get());
-            }
+    renderer = std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>>(
+            SDL_CreateRenderer(window.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC),
+            SDL_DestroyRenderer
     );
 }
 
@@ -77,7 +85,12 @@ void Game::Update(double deltaTime) {
 void Game::Render() {
     auto now = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()).count();
-    printf_s("%llu: Render()\n", now);
+    // printf_s("%llu: Render()\n", now);
+    SDL_SetRenderDrawColor(renderer.get(), 0, 0, 255, 255);
+    SDL_RenderClear(renderer.get());
+//    SDL_Rect rect {0, 0, 100, 100};
+//    SDL_RenderFillRect(renderer.get(), &rect);
+    SDL_RenderPresent(renderer.get());
 }
 
 SDL_Window* Game::Window() {
@@ -85,8 +98,6 @@ SDL_Window* Game::Window() {
 }
 
 Game::~Game() {
-    screen = nullptr;
+    renderer = nullptr;
     window = nullptr;
 }
-
-#pragma clang diagnostic pop
