@@ -3,8 +3,6 @@
 //
 module;
 
-#include "std.h"
-
 export module GameService:IService;
 
 export class IService {

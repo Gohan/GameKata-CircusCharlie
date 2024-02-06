@@ -9,9 +9,10 @@ export module GameService:GameServiceContainer;
 
 import :IService;
 
+class Game;
 export class GameServiceContainer {
 public:
-    GameServiceContainer() = default;
+    explicit GameServiceContainer(Game* game);
     virtual ~GameServiceContainer() = default;
 
     template<class T = IService>
@@ -22,8 +23,9 @@ public:
     template<class T = IService>
     std::shared_ptr<T> GetService() {
         return std::dynamic_pointer_cast<T>(services[typeid(T).name()]);
-    }
+    };
 
 private:
     std::map<std::string, std::shared_ptr<IService>> services;
 };
+
