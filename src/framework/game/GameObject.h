@@ -10,7 +10,10 @@ class GameObject {
 public:
     friend class BaseGame;
 
-    explicit GameObject(BaseGame* game) { this->game = game; }
+    explicit GameObject(BaseGame* game);
+    virtual ~GameObject() = default;
+    virtual void Update(double deltaTime) = 0;
+    virtual void Render() = 0;
 
     template<class Component>
     void AddComponent(std::shared_ptr<Component> component);
@@ -32,7 +35,6 @@ public:
         children.remove(std::dynamic_pointer_cast<GameObject*>(child));
     }
 
-    virtual ~GameObject() = default;
 protected:
     GameObject* parent = nullptr;
     BaseGame* game = nullptr;

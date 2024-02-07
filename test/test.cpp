@@ -1,7 +1,7 @@
 //
 // Created by cppgo on 2024/2/3.
 //
-import Game;
+#include "game/game.h"
 #include "gtest/gtest.h"
 
 /**
@@ -17,4 +17,3 @@ TEST(冒烟测试, TEST_CASE2) {
     game->Init("TEST", 100, 100);
     EXPECT_NE(game->Window(), nullptr);
 }
-

@@ -3,6 +3,7 @@
 //
 
 #include "BaseGame.h"
+#include "GameObject.h"
 #include "../services/ControllerGameService.h"
 #include "../services/GameServiceContainer.h"
 
@@ -80,6 +81,9 @@ void BaseGame::Render() {
     SDL_RenderClear(renderer.get());
 //    SDL_Rect rect {-1, 0, 100, 100};
 //    SDL_RenderFillRect(renderer.get(), &rect);
+    for (auto& gameObject: gameObjects) {
+        gameObject.get()->Render();
+    }
     SDL_RenderPresent(renderer.get());
 }
 
@@ -90,5 +94,19 @@ SDL_Window* BaseGame::Window() {
 BaseGame::~BaseGame() {
     renderer = nullptr;
     window = nullptr;
+}
+
+void BaseGame::AddGameObject(std::shared_ptr<GameObject> gameObject) {
+    if (gameObjects.contains(gameObject)) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "GameObject already exists in gameObjects");
+    }
+    gameObjects.insert(gameObject);
+}
+
+void BaseGame::RemoveGameObject(std::shared_ptr<GameObject> gameObject) {
+    if (!gameObjects.contains(gameObject)) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "GameObject not found in gameObjects");
+    }
+    gameObjects.erase(gameObject);
 }
 

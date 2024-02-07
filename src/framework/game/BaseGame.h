@@ -4,11 +4,13 @@
 #pragma once
 
 #include "std.h"
+#include <tsl/ordered_set.h>
 #include <SDL.h>
-#include "GameComponent.h"
 
 template<class Game>
 class GameServiceContainer;
+
+class GameObject;
 
 class BaseGame {
 public:
@@ -19,10 +21,14 @@ public:
     uint64_t TickUpdate(SDL_Event& e);
     void RenderOnce(SDL_Event& e);
     SDL_Window* Window();
+    void AddGameObject(std::shared_ptr<GameObject> gameObject);
+    void RemoveGameObject(std::shared_ptr<GameObject> gameObject);
 
 protected:
     virtual void Update(double deltaTime);
     virtual void Render();
+    std::unique_ptr<GameServiceContainer<BaseGame>> container;
+    tsl::ordered_set<std::shared_ptr<GameObject>> gameObjects;
 
 private:
     bool isExit = false;
@@ -32,5 +38,4 @@ private:
     std::tm time = {};
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window;
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer;
-    std::unique_ptr<GameServiceContainer<BaseGame>> container;
 };

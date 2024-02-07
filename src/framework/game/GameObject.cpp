@@ -3,3 +3,7 @@
 //
 
 #include "GameObject.h"
+
+GameObject::GameObject(BaseGame* game) {
+    this->game = game;
+}
