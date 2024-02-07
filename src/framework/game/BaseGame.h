@@ -5,6 +5,7 @@
 
 #include "std.h"
 #include <SDL.h>
+template<class Game>
 class GameServiceContainer;
 
 class BaseGame {
@@ -27,5 +28,5 @@ private:
     std::tm time = {};
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window;
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer;
-    std::unique_ptr<GameServiceContainer> container;
+    std::unique_ptr<GameServiceContainer<BaseGame>> container;
 };

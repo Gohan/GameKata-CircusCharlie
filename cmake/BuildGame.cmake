@@ -7,7 +7,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(PLATFORM "Win32")
 
 set(CircusCharlieGame_INCLUDE_DIR "src")
-include_directories(${SDL2_INCLUDE_DIR} ${SDL2_image_INCLUDE_DIR} ${GSL_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_image_INCLUDE_DIR} ${GSL_INCLUDE_DIR} ${ordered-map_INCLUDE_DIR})
 message("Hello ${SDL2_INCLUDE_DIR} ${SDL2_SOURCE_DIR} ${SDL2_image_SOURCE_DIR}")
 #add_executable(${PROJECT_NAME} ${CircusCharlieGame_SOURCES})
 add_executable(${PROJECT_NAME})

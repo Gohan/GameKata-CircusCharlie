@@ -9,9 +9,13 @@ public:
 
 class BaseGame;
 
+template<class Game>
 class GameServiceContainer {
 public:
-    explicit GameServiceContainer(BaseGame* game);
+    explicit GameServiceContainer(Game* game) {
+        this->game = game;
+    }
+
     virtual ~GameServiceContainer() = default;
 
     template<class T = IService>
@@ -26,6 +30,6 @@ public:
 
 private:
     std::map<std::string, std::shared_ptr<IService>> services;
-    BaseGame* game;
+    Game* game;
 };
 

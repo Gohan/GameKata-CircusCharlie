@@ -7,7 +7,7 @@
 #include "../services/GameServiceContainer.h"
 
 BaseGame::BaseGame() {
-    container = std::make_unique<GameServiceContainer>(this);
+    container = std::make_unique<GameServiceContainer<BaseGame>>(this);
 }
 
 void BaseGame::Init(const std::string& title, int windowWidth, int windowHeight) {

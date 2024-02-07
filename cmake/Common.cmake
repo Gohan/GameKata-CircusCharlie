@@ -1,5 +1,13 @@
 include("${CMAKE_CURRENT_LIST_DIR}/CPM.cmake")
 
+function(ShowVariables)
+    get_cmake_property(_variableNames VARIABLES)
+    list (SORT _variableNames)
+    foreach (_variableName ${_variableNames})
+        message(STATUS "${_variableName}=${${_variableName}}")
+    endforeach()
+endfunction()
+
 function(SetupGoogleTest)
     CPMAddPackage("gh:google/googletest#v1.14.0")
 endfunction()
@@ -18,6 +26,8 @@ endfunction()
 function(SetupFrameworks)
     CPMAddPackage("gh:microsoft/GSL#v4.0.0")
     set(GSL_INCLUDE_DIR "${GSL_SOURCE_DIR}/include" PARENT_SCOPE)
+    CPMAddPackage("gh:Tessil/ordered-map#v1.1.0")
+    set(ordered-map_INCLUDE_DIR "${ordered-map_SOURCE_DIR}/include" PARENT_SCOPE)
 endfunction()
 
 SetupFrameworks()

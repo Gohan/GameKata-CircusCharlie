@@ -7,7 +7,8 @@ public:
     explicit ControllerGameService(BaseGame* game) {
         this->game = game;
     }
-    virtual ~ControllerGameService() = default;
+
+    ~ControllerGameService() override = default;
 private:
     BaseGame* game;
 };
