@@ -5,6 +5,8 @@
 
 #include "std.h"
 #include <SDL.h>
+#include "GameComponent.h"
+
 template<class Game>
 class GameServiceContainer;
 

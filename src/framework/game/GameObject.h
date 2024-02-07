@@ -8,6 +8,8 @@ class GameComponent;
 
 class GameObject {
 public:
+    friend class BaseGame;
+
     explicit GameObject(BaseGame* game) { this->game = game; }
 
     template<class Component>
