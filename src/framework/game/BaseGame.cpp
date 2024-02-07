@@ -41,10 +41,19 @@ void BaseGame::Init(const std::string& title, int windowWidth, int windowHeight)
 
 void BaseGame::RunLoop() {
     SDL_Event e;
-    lastTime = SDL_GetPerformanceCounter();
-    while (!isExit) {
-        RenderOnce(e);
+    while (RunLoopOnce(e));
+}
+
+bool BaseGame::RunLoopOnce(SDL_Event& e) {
+    if (!isExit) {
+        lastTime = SDL_GetPerformanceCounter();
+        nextTick = lastTime + (SDL_GetPerformanceFrequency() / 60);
+        do {
+            lastTime = TickUpdate(e);
+        } while (SDL_GetPerformanceCounter() <= nextTick);
+        Render();
     }
+    return !isExit;
 }
 
 uint64_t BaseGame::TickUpdate(SDL_Event& e) {
@@ -61,16 +70,10 @@ uint64_t BaseGame::TickUpdate(SDL_Event& e) {
     return nowTime;
 }
 
-void BaseGame::RenderOnce(SDL_Event& e) {
-    nextTick = lastTime + (SDL_GetPerformanceFrequency() / 60);
-    do {
-        lastTime = TickUpdate(e);
-    } while (SDL_GetPerformanceCounter() <= nextTick);
-    Render();
-}
-
 void BaseGame::Update(double deltaTime) {
-    // TODO: do update
+    for (auto& gameObject: gameObjects) {
+        gameObject.get()->Update(deltaTime);
+    }
 }
 
 void BaseGame::Render() {
@@ -109,4 +112,3 @@ void BaseGame::RemoveGameObject(std::shared_ptr<GameObject> gameObject) {
     }
     gameObjects.erase(gameObject);
 }
-

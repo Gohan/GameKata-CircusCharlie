@@ -13,18 +13,19 @@ class GameServiceContainer;
 class GameObject;
 
 class BaseGame {
+    friend class BaseGameTest;
 public:
     BaseGame();
     virtual ~BaseGame();
     void Init(const std::string& title, int windowWidth, int windowHeight);
     void RunLoop();
-    uint64_t TickUpdate(SDL_Event& e);
-    void RenderOnce(SDL_Event& e);
     SDL_Window* Window();
     void AddGameObject(std::shared_ptr<GameObject> gameObject);
     void RemoveGameObject(std::shared_ptr<GameObject> gameObject);
 
 protected:
+    uint64_t TickUpdate(SDL_Event& e);
+    bool RunLoopOnce(SDL_Event& e);
     virtual void Update(double deltaTime);
     virtual void Render();
     std::unique_ptr<GameServiceContainer<BaseGame>> container;
