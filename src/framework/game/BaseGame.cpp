@@ -42,22 +42,30 @@ void BaseGame::RunLoop() {
     SDL_Event e;
     lastTime = SDL_GetPerformanceCounter();
     while (!isExit) {
-        nextTick = lastTime + (SDL_GetPerformanceFrequency() / 60);
-        do {
-            while (SDL_PollEvent(&e)) {
-                switch (e.type) {
-                    case SDL_QUIT:
-                        isExit = true;
-                        continue;
-                }
-            }
-            nowTime = SDL_GetPerformanceCounter();
-            auto deltaTime = (double(nowTime - lastTime) * 1000 / (double) SDL_GetPerformanceFrequency());
-            Update(deltaTime);
-            lastTime = nowTime;
-        } while (SDL_GetPerformanceCounter() <= nextTick);
-        Render();
+        RenderOnce(e);
     }
+}
+
+uint64_t BaseGame::TickUpdate(SDL_Event& e) {
+    while (SDL_PollEvent(&e)) {
+        switch (e.type) {
+            case SDL_QUIT:
+                isExit = true;
+                continue;
+        }
+    }
+    nowTime = SDL_GetPerformanceCounter();
+    auto deltaTime = (double(nowTime - lastTime) * 1000 / (double) SDL_GetPerformanceFrequency());
+    Update(deltaTime);
+    return nowTime;
+}
+
+void BaseGame::RenderOnce(SDL_Event& e) {
+    nextTick = lastTime + (SDL_GetPerformanceFrequency() / 60);
+    do {
+        lastTime = TickUpdate(e);
+    } while (SDL_GetPerformanceCounter() <= nextTick);
+    Render();
 }
 
 void BaseGame::Update(double deltaTime) {
@@ -83,3 +91,4 @@ BaseGame::~BaseGame() {
     renderer = nullptr;
     window = nullptr;
 }
+

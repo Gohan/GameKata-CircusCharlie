@@ -6,3 +6,5 @@
 #include <iomanip>
 #include <map>
 #include <typeinfo>
+#include <list>
+#include <algorithm>

@@ -16,6 +16,8 @@ public:
     virtual ~BaseGame();
     void Init(const std::string& title, int windowWidth, int windowHeight);
     void RunLoop();
+    uint64_t TickUpdate(SDL_Event& e);
+    void RenderOnce(SDL_Event& e);
     SDL_Window* Window();
 
 protected:

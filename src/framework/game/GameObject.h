@@ -21,10 +21,23 @@ public:
     template<class Component>
     void RemoveComponent();
 
+    template<class GameObjectType>
+    void AddChild(std::shared_ptr<GameObjectType> child) {
+        child->parent = this;
+        children.push_back(std::dynamic_pointer_cast<GameObject*>(child));
+    }
+
+    template<class GameObjectType>
+    void RemoveChild(std::shared_ptr<GameObjectType> child) {
+        children.remove(std::dynamic_pointer_cast<GameObject*>(child));
+    }
+
     virtual ~GameObject() = default;
 protected:
-    BaseGame* game;
+    GameObject* parent = nullptr;
+    BaseGame* game = nullptr;
     tsl::ordered_map<std::string, std::shared_ptr<GameComponent>> components;
+    std::list<std::shared_ptr<GameObject>> children;
 };
 
 template<class Component>
