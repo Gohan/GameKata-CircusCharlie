@@ -12,9 +12,15 @@ public:
         int16_t frameWidth;
         int16_t frameHeight;
         int16_t frameRate;
-        int16_t frameStart;
-        int16_t frameEnd;
+        int8_t frameStart;
+        int8_t frameEnd;
         SDL_Texture* texture;
+    };
+
+    struct SpriteAnimation {
+        SpriteSheets* spriteSheet;
+        int8_t frame;
+        float totalTicks;
     };
 
     explicit RenderService(BaseGame* game) {
@@ -23,15 +29,18 @@ public:
 
     ~RenderService() override;
 
-    SDL_Texture* LoadTexture(const std::string& path);
-    void UnloadTexture(const std::string& path);
+    SDL_Texture* LoadTexture(const absl::string_view& path);
+    void UnloadTexture(const absl::string_view& path);
     SpriteSheets* PreparedSpriteSheet(
-            const std::string& name, SDL_Texture* texture,
-            int8_t frameWidth, int8_t frameHeight,
-            int8_t frameRate, int8_t frameStart, int8_t frameEnd
+            const absl::string_view& name, SDL_Texture* texture,
+            int16_t frameWidth, int16_t frameHeight,
+            int16_t frameRate, int8_t frameStart, int8_t frameEnd
     );
-
+    SpriteAnimation* CreateSpriteAnimation(SpriteSheets* spriteSheet);
+    SpriteAnimation* CreateSpriteAnimation(const absl::string_view& name);
+    void UpdateAnimation(SpriteAnimation* animation, double deltaTime);
+    void RenderAnimation(SpriteAnimation* animation);
 private:
-    std::unordered_map<std::string, SDL_Texture*> textures;
-    std::unordered_map<std::string, std::unique_ptr<SpriteSheets>> spriteSheets;
+    std::unordered_map<absl::string_view, SDL_Texture*> textures;
+    std::unordered_map<absl::string_view, std::unique_ptr<SpriteSheets>> spriteSheets;
 };
