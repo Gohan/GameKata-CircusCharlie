@@ -14,5 +14,6 @@ Game::~Game() {
 
 void Game::OnInitialize() {
     BaseGame::OnInitialize();
+
     AddGameObject(std::make_shared<Player>(this));
 }

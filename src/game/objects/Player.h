@@ -3,7 +3,7 @@
 #include "std.h"
 #include "framework/game/GameObject.h"
 
-class TextureService;
+class RenderService;
 class SDL_Texture;
 
 class Game;
@@ -15,7 +15,7 @@ namespace kata2024::game::objects {
         void Update(double deltaTime) override;
         void Render() override;
     private:
-        std::shared_ptr<TextureService> textureService;
+        std::shared_ptr<RenderService> textureService;
         SDL_Texture* texture;
     };
 
