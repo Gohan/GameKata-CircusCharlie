@@ -12,8 +12,14 @@ BaseGame::BaseGame() {
 }
 
 void BaseGame::Init(const std::string& title, int windowWidth, int windowHeight) {
+#ifdef KATA_DEBUG
+    SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
+#endif
     //Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
+    SDL_SetHint(SDL_HINT_JOYSTICK_RAWINPUT, "0");
+    SDL_SetHint(SDL_HINT_JOYSTICK_THREAD, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
         printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
         exit(0);
     }
@@ -36,7 +42,11 @@ void BaseGame::Init(const std::string& title, int windowWidth, int windowHeight)
     );
     container->AddService(std::make_shared<ControllerGameService>(this));
     auto spControllerGameService = container->GetService<ControllerGameService>();
-    printf("spControllerGameService: %p\n", spControllerGameService.get());
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "spControllerGameService: %p", spControllerGameService.get());
+}
+
+void BaseGame::CleanUp() {
+    container->RemoveService<ControllerGameService>();
 }
 
 void BaseGame::RunLoop() {
@@ -62,11 +72,18 @@ uint64_t BaseGame::TickUpdate(SDL_Event& e) {
             case SDL_QUIT:
                 isExit = true;
                 continue;
+            default:
+                container->DispatchEvent(e);
+                break;
         }
     }
+    gameState = GameState::BeforeUpdate;
+    ProcessGameObjectOperations();
     nowTime = SDL_GetPerformanceCounter();
     auto deltaTime = (double(nowTime - lastTime) * 1000 / (double) SDL_GetPerformanceFrequency());
+    gameState = GameState::Updating;
     Update(deltaTime);
+    gameState = GameState::AfterUpdate;
     return nowTime;
 }
 
@@ -100,6 +117,10 @@ BaseGame::~BaseGame() {
 }
 
 void BaseGame::AddGameObject(std::shared_ptr<GameObject> gameObject) {
+    if (gameState != GameState::Updating) {
+        gameObjectOperations.emplace_back(GameObjectOperation{GameObjectOperation::Operation::Add, gameObject});
+        return;
+    }
     if (gameObjects.contains(gameObject)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "GameObject already exists in gameObjects");
     }
@@ -107,8 +128,29 @@ void BaseGame::AddGameObject(std::shared_ptr<GameObject> gameObject) {
 }
 
 void BaseGame::RemoveGameObject(std::shared_ptr<GameObject> gameObject) {
+    if (gameState != GameState::Updating) {
+        gameObjectOperations.emplace_back(GameObjectOperation{GameObjectOperation::Operation::Add, gameObject});
+        return;
+    }
     if (!gameObjects.contains(gameObject)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "GameObject not found in gameObjects");
     }
     gameObjects.erase(gameObject);
+}
+
+void BaseGame::ProcessGameObjectOperations() {
+    assert(gameState != GameState::Updating);
+    auto it = gameObjectOperations.begin();
+    while (it != gameObjectOperations.end()) {
+        auto& operation = *it;
+        switch (operation.operation) {
+            case GameObjectOperation::Operation::Add:
+                AddGameObject(operation.gameObject);
+                break;
+            case GameObjectOperation::Operation::Remove:
+                RemoveGameObject(operation.gameObject);
+                break;
+        }
+        it = gameObjectOperations.erase(it);
+    }
 }

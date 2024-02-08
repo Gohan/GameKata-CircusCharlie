@@ -24,6 +24,7 @@ int SDL_main(int argc, char* args[]) {
     auto game = std::make_unique<Game>();
     game->Init("MyGame", SCREEN_WIDTH, SCREEN_HEIGHT);
     game->RunLoop();
+    game->CleanUp();
     game = nullptr;
 
     //The window we'll be rendering to
@@ -33,7 +34,7 @@ int SDL_main(int argc, char* args[]) {
     SDL_Surface* screenSurface = NULL;
 
     //Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
     } else {
         //Create window

@@ -3,5 +3,3 @@
 //
 
 #include "GameServiceContainer.h"
-
-IService::~IService() = default;
