@@ -43,6 +43,8 @@ void BaseGame::Init(const std::string& title, int windowWidth, int windowHeight)
     container->AddService(std::make_shared<ControllerGameService>(this));
     auto spControllerGameService = container->GetService<ControllerGameService>();
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "spControllerGameService: %p", spControllerGameService.get());
+
+    OnInitialize();
 }
 
 void BaseGame::CleanUp() {
@@ -67,17 +69,17 @@ bool BaseGame::RunLoopOnce(SDL_Event& e) {
 }
 
 uint64_t BaseGame::TickUpdate(SDL_Event& e) {
+    gameState = GameState::BeforeUpdate;
     while (SDL_PollEvent(&e)) {
+        container->DispatchEvent(e);
         switch (e.type) {
             case SDL_QUIT:
                 isExit = true;
                 continue;
             default:
-                container->DispatchEvent(e);
                 break;
         }
     }
-    gameState = GameState::BeforeUpdate;
     ProcessGameObjectOperations();
     nowTime = SDL_GetPerformanceCounter();
     auto deltaTime = (double(nowTime - lastTime) * 1000 / (double) SDL_GetPerformanceFrequency());
@@ -117,7 +119,7 @@ BaseGame::~BaseGame() {
 }
 
 void BaseGame::AddGameObject(std::shared_ptr<GameObject> gameObject) {
-    if (gameState != GameState::Updating) {
+    if (gameState == GameState::Updating) {
         gameObjectOperations.emplace_back(GameObjectOperation{GameObjectOperation::Operation::Add, gameObject});
         return;
     }
@@ -128,7 +130,7 @@ void BaseGame::AddGameObject(std::shared_ptr<GameObject> gameObject) {
 }
 
 void BaseGame::RemoveGameObject(std::shared_ptr<GameObject> gameObject) {
-    if (gameState != GameState::Updating) {
+    if (gameState == GameState::Updating) {
         gameObjectOperations.emplace_back(GameObjectOperation{GameObjectOperation::Operation::Add, gameObject});
         return;
     }

@@ -47,6 +47,7 @@ public:
 protected:
     uint64_t TickUpdate(SDL_Event& e);
     bool RunLoopOnce(SDL_Event& e);
+    virtual void OnInitialize() {};
     virtual void Update(double deltaTime);
     virtual void Render();
     void ProcessGameObjectOperations();
