@@ -4,6 +4,10 @@
 #include "absl/strings/str_join.h"
 
 namespace {
+    constexpr bool DEBUG = true;
+}
+
+namespace {
     class ControllerState {
     public:
         ControllerState(int32_t which, SDL_GameController* controller) :
@@ -29,7 +33,7 @@ public:
     bool OnProcessEvent(SDL_Event& e) override {
         switch (e.type) {
             case SDL_CONTROLLERDEVICEADDED: {
-                SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,
+                SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
                             "ControllerGameService::OnProcessEvent: SDL_CONTROLLERDEVICEADDED");
                 auto controller = SDL_GameControllerOpen(e.cdevice.which);
                 auto state = ControllerState{e.cdevice.which, controller};
@@ -37,7 +41,7 @@ public:
                 break;
             }
             case SDL_CONTROLLERDEVICEREMOVED: {
-                SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,
+                SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
                             "ControllerGameService::OnProcessEvent: SDL_CONTROLLERDEVICEREMOVED");
                 auto removed = std::remove_if(gameControllers.begin(), gameControllers.end(), [&](const auto& item) {
                     return item.which == e.cdevice.which;
@@ -46,7 +50,7 @@ public:
                     SDL_GameControllerClose(removed->controller);
                     gameControllers.erase(removed);
                 } else {
-                    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "ControllerGameService::OnProcessEvent: not found");
+                    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "ControllerGameService::OnProcessEvent: not found");
                 }
                 break;
             }
@@ -56,7 +60,8 @@ public:
                     return item.which == e.cbutton.which;
                 });
                 if (it == gameControllers.end()) {
-                    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "ControllerGameService::OnProcessEvent: not found");
+                    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                                 "ControllerGameService::OnProcessEvent(SDL_CONTROLLERBUTTON): not found controller");
                     return false;
                 }
                 if (e.cbutton.state == SDL_PRESSED) {
@@ -64,8 +69,11 @@ public:
                 } else {
                     it->buttons.reset(e.cbutton.button);
                 }
-                SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "ControllerGameService::OnProcessEvent: %s",
-                            it->buttons.to_string().c_str());
+                if (DEBUG) {
+                    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                                 "ControllerGameService::OnProcessEvent: SDL_CONTROLLERBUTTON: %s",
+                                 it->buttons.to_string().c_str());
+                }
                 break;
             }
             case SDL_CONTROLLERAXISMOTION: {
@@ -73,13 +81,16 @@ public:
                     return item.which == e.caxis.which;
                 });
                 if (it == gameControllers.end()) {
-                    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "ControllerGameService::OnProcessEvent: not found");
+                    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                                 "ControllerGameService::OnProcessEvent(SDL_CONTROLLERAXISMOTION): not found controller");
                     return false;
                 }
-                SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "ControllerGameService::OnProcessEvent: axis: %d, value: %d",
-                            e.caxis.axis, e.caxis.value);
                 it->axes[e.caxis.axis] = e.caxis.value;
-                SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "ControllerGameService::OnProcessEvent: %s", absl::StrJoin(it->axes, ", ").c_str());
+                if (DEBUG) {
+                    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                                "ControllerGameService::OnProcessEvent: SDL_CONTROLLERAXISMOTION: %s",
+                                absl::StrJoin(it->axes, ", ").c_str());
+                }
                 break;
             }
         }
