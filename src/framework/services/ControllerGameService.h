@@ -28,13 +28,15 @@ public:
         this->game = game;
     }
 
-    ~ControllerGameService() override = default;
+    ~ControllerGameService() override {
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "ControllerGameService destroyed");
+    };
 
     bool OnProcessEvent(SDL_Event& e) override {
         switch (e.type) {
             case SDL_CONTROLLERDEVICEADDED: {
                 SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
-                            "ControllerGameService::OnProcessEvent: SDL_CONTROLLERDEVICEADDED");
+                             "ControllerGameService::OnProcessEvent: SDL_CONTROLLERDEVICEADDED");
                 auto controller = SDL_GameControllerOpen(e.cdevice.which);
                 auto state = ControllerState{e.cdevice.which, controller};
                 gameControllers.emplace_back(state);
@@ -42,7 +44,7 @@ public:
             }
             case SDL_CONTROLLERDEVICEREMOVED: {
                 SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION,
-                            "ControllerGameService::OnProcessEvent: SDL_CONTROLLERDEVICEREMOVED");
+                             "ControllerGameService::OnProcessEvent: SDL_CONTROLLERDEVICEREMOVED");
                 auto removed = std::remove_if(gameControllers.begin(), gameControllers.end(), [&](const auto& item) {
                     return item.which == e.cdevice.which;
                 });
@@ -88,8 +90,8 @@ public:
                 it->axes[e.caxis.axis] = e.caxis.value;
                 if (DEBUG) {
                     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-                                "ControllerGameService::OnProcessEvent: SDL_CONTROLLERAXISMOTION: %s",
-                                absl::StrJoin(it->axes, ", ").c_str());
+                                 "ControllerGameService::OnProcessEvent: SDL_CONTROLLERAXISMOTION: %s",
+                                 absl::StrJoin(it->axes, ", ").c_str());
                 }
                 break;
             }

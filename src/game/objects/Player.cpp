@@ -17,7 +17,6 @@ Player::Player(Game* game) : GameObject(game) {
 }
 
 void Player::Update(double deltaTime) {
-    SDL_LogVerbose(SDL_LOG_CATEGORY_APPLICATION, "Player::Update: %f", deltaTime);
 }
 
 void Player::Render() {

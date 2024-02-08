@@ -1,12 +1,17 @@
-//
-// Created by cppgo on 2024/2/6.
-//
-
 #include "BaseGame.h"
 #include "GameObject.h"
 #include "../services/ControllerGameService.h"
 #include "../services/TextureService.h"
 #include "../services/GameServiceContainer.h"
+#include <SDL_image.h>
+
+static bool InitImagePng() {
+    int imgFlags = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlags) & imgFlags)) {
+        return false;
+    }
+    return true;
+}
 
 BaseGame::BaseGame() {
     container = std::make_unique<GameServiceContainer<BaseGame>>(this);
@@ -22,6 +27,11 @@ void BaseGame::Init(const std::string& title, int windowWidth, int windowHeight)
     SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
         printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
+        exit(0);
+    }
+
+    if (!InitImagePng()) {
+        printf("SDL_image could not initialize! SDL_image Error: %s\n", SDL_GetError());
         exit(0);
     }
 
@@ -47,10 +57,6 @@ void BaseGame::Init(const std::string& title, int windowWidth, int windowHeight)
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "spControllerGameService: %p", spControllerGameService.get());
 
     OnInitialize();
-}
-
-void BaseGame::CleanUp() {
-    container->RemoveService<ControllerGameService>();
 }
 
 void BaseGame::RunLoop() {
@@ -116,8 +122,11 @@ SDL_Window* BaseGame::Window() {
 }
 
 BaseGame::~BaseGame() {
+    gameObjects.clear();
+    container = nullptr;
     renderer = nullptr;
     window = nullptr;
+    SDL_Quit();
 }
 
 void BaseGame::AddGameObject(std::shared_ptr<GameObject> gameObject) {

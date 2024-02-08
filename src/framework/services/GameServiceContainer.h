@@ -25,7 +25,10 @@ public:
         this->game = game;
     }
 
-    virtual ~GameServiceContainer() = default;
+    virtual ~GameServiceContainer() {
+        services.clear();
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "GameServiceContainer destroyed");
+    };
 
     template<class T = IService<Game>>
     void AddService(std::shared_ptr<T> service) {
@@ -77,4 +80,3 @@ private:
     std::list<ISDLEventProcessor*> sdlEventProcessors;
     Game* game;
 };
-

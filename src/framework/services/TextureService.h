@@ -9,7 +9,7 @@ public:
         this->game = game;
     };
 
-    ~TextureService() override {};
+    ~TextureService() override;
 
     SDL_Texture* LoadTexture(const std::string& path);
     void UnloadTexture(const std::string& path);

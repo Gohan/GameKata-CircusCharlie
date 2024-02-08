@@ -14,6 +14,5 @@ Game::~Game() {
 
 void Game::OnInitialize() {
     BaseGame::OnInitialize();
-    controllerGameService = GetService<ControllerGameService>();
     AddGameObject(std::make_shared<Player>(this));
 }

@@ -38,7 +38,6 @@ public:
     BaseGame();
     virtual ~BaseGame();
     void Init(const std::string& title, int windowWidth, int windowHeight);
-    void CleanUp();
     void RunLoop();
     SDL_Window* Window();
     void AddGameObject(std::shared_ptr<GameObject> gameObject);

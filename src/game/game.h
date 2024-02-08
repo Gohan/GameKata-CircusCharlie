@@ -23,7 +23,4 @@ public:
     std::shared_ptr<T> GetService() {
         return container->GetService<T>();
     }
-
-private:
-    std::shared_ptr<ControllerGameService> controllerGameService;
 };

@@ -5,8 +5,6 @@
 #include <cstdio>
 #include "game/game.h"
 
-//Screen dimension constants
-std::unique_ptr<Game> g_game;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
@@ -24,7 +22,10 @@ int SDL_main(int argc, char* args[]) {
     auto game = std::make_unique<Game>();
     game->Init("MyGame", SCREEN_WIDTH, SCREEN_HEIGHT);
     game->RunLoop();
-    game->CleanUp();
+
+    game = std::make_unique<Game>();
+    game->Init("MyGame", SCREEN_WIDTH, SCREEN_HEIGHT);
+    game->RunLoop();
     game = nullptr;
 
     //The window we'll be rendering to
