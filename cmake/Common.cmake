@@ -28,6 +28,8 @@ function(SetupFrameworks)
     set(GSL_INCLUDE_DIR "${GSL_SOURCE_DIR}/include" PARENT_SCOPE)
     CPMAddPackage("gh:Tessil/ordered-map#v1.1.0")
     set(ordered-map_INCLUDE_DIR "${ordered-map_SOURCE_DIR}/include" PARENT_SCOPE)
+    CPMAddPackage("gh:abseil/abseil-cpp#20240116.0")
+    set(abseil-cpp_INCLUDE_DIR "${abseil-cpp_SOURCE_DIR}" PARENT_SCOPE)
 endfunction()
 
 SetupFrameworks()

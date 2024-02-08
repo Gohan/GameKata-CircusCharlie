@@ -27,4 +27,5 @@ target_sources(${PROJECT_NAME}
 #endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2-static gtest)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_image::SDL2_image-static)
+target_link_libraries(${PROJECT_NAME} PRIVATE absl::strings)
 target_compile_definitions(${PROJECT_NAME} PRIVATE FAKE_MODULE_INCLUDE=1)
