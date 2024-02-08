@@ -5,6 +5,7 @@
 #include "BaseGame.h"
 #include "GameObject.h"
 #include "../services/ControllerGameService.h"
+#include "../services/TextureService.h"
 #include "../services/GameServiceContainer.h"
 
 BaseGame::BaseGame() {
@@ -41,6 +42,7 @@ void BaseGame::Init(const std::string& title, int windowWidth, int windowHeight)
             SDL_DestroyRenderer
     );
     container->AddService(std::make_shared<ControllerGameService>(this));
+    container->AddService(std::make_shared<TextureService>(this));
     auto spControllerGameService = container->GetService<ControllerGameService>();
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "spControllerGameService: %p", spControllerGameService.get());
 

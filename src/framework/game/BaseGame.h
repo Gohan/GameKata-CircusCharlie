@@ -21,7 +21,7 @@ public:
 public:
     GameObjectOperation(
             Operation operation,
-            std::shared_ptr<GameObject> gameObject
+            const std::shared_ptr<GameObject>& gameObject
     ) : operation(operation), gameObject(gameObject) {}
     Operation operation;
     std::shared_ptr<GameObject> gameObject;
@@ -43,6 +43,7 @@ public:
     SDL_Window* Window();
     void AddGameObject(std::shared_ptr<GameObject> gameObject);
     void RemoveGameObject(std::shared_ptr<GameObject> gameObject);
+    inline SDL_Renderer* Renderer() { return renderer.get(); }
 
 protected:
     uint64_t TickUpdate(SDL_Event& e);
