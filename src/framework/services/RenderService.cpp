@@ -110,12 +110,7 @@ void RenderService::UpdateAnimation(RenderService::SpriteAnimation* animation, d
         if (animation->frame >= spriteSheet->frameEnd) {
             animation->frame = spriteSheet->frameStart;
         }
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Add SpriteAnimation: %s, frame: %d, %d, %lf, %llu", spriteSheet->name,
-                    animation->frame, animation->totalTicks, deltaTime, SDL_GetPerformanceFrequency());
         animation->totalTicks -= spriteSheet->frameRate;
-    } else {
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "SpriteAnimation: %s, frame: %d, %d", spriteSheet->name,
-                    animation->frame, animation->totalTicks);
     }
 }
 
